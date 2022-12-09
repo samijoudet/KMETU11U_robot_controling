@@ -1,0 +1,108 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[english]{babel}
+
+% Set page size and margins
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{graphicx}
+
+% Page number in footer
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{Page \thepage\ of \pageref*{LastPage}}
+
+% Set path to images
+\graphicspath{ {./resources/} }
+
+
+
+\title{Midterm summary report - Temperature mapping with an automated guided vehicle}
+
+\author{Student: Anthony IOZZIA\\Supervisor: Gilles MENEZ}
+
+\begin{document}
+\maketitle
+
+\thispagestyle{fancy}
+
+\begin{abstract}
+The goal of this project is to build a guidance system (as automatic as possible), allowing car-type robots to cover the different rooms of a building and to produce a heat map. There are many possible applications for this project, the most evident ones being to identify areas with extreme temperatures in large buildings, or to map the temperature of dangerous areas where humans cannot go, such as irradiated areas.
+\end{abstract}
+
+\section{State of the art}
+
+Here is the state of the art of the research topic in progress.
+
+\subsection{Existing guidance technology}
+
+Here are the existing means of navigation that are currently used for automated guided vehicles:
+\begin{itemize}
+    \item Wired / guide tape / invisible UV markers on the floor
+    \item Laser target navigation (reflective tape on walls)
+    \item Inertial (Gyroscopic) navigation
+    \item Natural feature (Natural Targeting) navigation
+    \item Vision guidance (normal camera, infrared, LIDAR)
+    \item Geoguidance
+\end{itemize}
+
+\subsection{Some examples of similar projects}
+
+\begin{itemize}
+    \item \href{https://www.nielit.gov.in/sites/default/files/Aurangabad/IRJET-V5I5624\%20(1).pdf}{IOT BASED AUTOMATED GUIDE VEHICLE} AGV that creates an inventory of every item present in a warehouse by reading the RFID tag of each item. It sends the data over Bluetooth. It uses an infrared sensor to follow a path and an ultrasonic sensor to detect and avoid obstacles.
+    \item \href{https://www.usinenouvelle.com/expo/robot-collaboratif-agv-aiv-minibot-p384315470.html#:~:text=La\%20version\%20AGV\%20(Automated\%20Guided,dans\%20lequel\%20il\%20se\%20trouve.}{Robot collaboratif AGV-AIV} Minibot Industrial robot that autonomously transports materials. 2 modes : AGV (follows electromagnetic lines) and AIV (moves using carthography and environmental scouting.
+\end{itemize}
+
+\section{Accomplishments}
+    
+Here is a list of what has been accomplished since the start of the project.
+
+\begin{itemize}
+    \item State of the art
+    \item Define objectives, goals and make choices
+    \item Assemble the robot: connect the microcontroller, the motors, the wheels and the battery to make a functional robot that can move
+    \item Basic program to make the robot move
+    \item Make a simple web interface to control the robot via Wi-Fi
+    \item Start research on PID line tracker theory to enable the robot to follow lines automatically and smoothly
+\end{itemize}
+
+\section{Remaining tasks}
+
+Here is a list of the remaining work. Figure \ref{fig:gantt_chart} is a Gantt chart to visualize the planned tasks. TODO set deadlines with the supervisor.
+
+\begin{itemize}
+    \item Mount components on the robot:
+        \begin{itemize}
+            \item line trackers
+            \item wheel lap counters to track the distance traveled
+            \item a camera mounted on servomotors to be able to rotate the camera
+            \item temperature sensor
+        \end{itemize}
+    \item Implement OTA (Over-the-air) to easily upload software to the robot
+    \item Implement a Node-RED dashboard to show the robot status in real time (snapshot of what the robot is seeing, temperature) and control it manually for debug purposes
+    \item Automatic robot guidance with lines:
+        \begin{itemize}
+            \item Implement a PID line tracker to be able follow lines automatically and smoothly
+            \item Implement a web server that receives images of doors and tells the robot to enter or not
+        \end{itemize}
+    \item Automatic robot guidance with only camera:
+        \begin{itemize}
+            \item Implement a web server that receives images at regular intervals of times and sends instructions to the robot
+        \end{itemize}
+    \item In case of obstacles, make the robot stop until there are no more obstacles
+    \item Write the scientific report (final report)
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{gantt_chart.png}
+\caption{\label{fig:gantt_chart}Planning of the remaining tasks}
+\end{figure}
+
+\end{document}

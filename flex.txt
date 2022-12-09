@@ -1,0 +1,10 @@
+gauche ->
+pouce: 2850 -> 3150
+index: 2950 -> 3500 
+majeur: 2850 -> 3320
+Droit ->
+pouce : 2800 -> 3150
+index : 2900 -> 3400
+majeur : 2750~2800 -> 3400
+
+max non fléchie -> min fléchie
