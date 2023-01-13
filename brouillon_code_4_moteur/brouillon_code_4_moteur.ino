@@ -40,7 +40,7 @@ int dutyCycle = 255;
 
 void setup() {
   // sets the pins as outputs:
-  /*
+   /*
   pinMode(motor_a_Pin1, OUTPUT); // on/off reculer puissance 100%
   pinMode(motor_a_Pin2, OUTPUT); // on/off avancer puissance 100%
   pinMode(enable_a_Pin, OUTPUT); // contrôle la vitesse
