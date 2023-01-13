@@ -1,3 +1,16 @@
+
+
+struct CAPTOR_PINS 
+{
+  const int pin;     // pin d'entrée
+  const String name; // nom du pin
+  int sens;          // valeur enregistrer en entrer
+  int out;           // valeur calibrer (min:0- max:100 lors de la calibration)
+  int min;           // valeur minimum lors de la calibration
+  int max;           // valeur maximum lors de la calibration
+};
+
+
 /* PINS */
 
 int out_value_to_pwm(int output_value);

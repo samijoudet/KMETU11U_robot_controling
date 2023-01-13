@@ -33,8 +33,8 @@
 // ===========================
 // Enter your WiFi credentials
 // ===========================
-const char* ssid = "GMAP";
-const char* password = "vijx47050";
+const char* ssid = "Mi Ni Tel"; (ne marche pas)
+const char* password = "samijoudet";
 
 void startCameraServer();
 

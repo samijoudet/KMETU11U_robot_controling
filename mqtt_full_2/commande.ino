@@ -68,8 +68,8 @@ void left(MOTOR_PINS MOTOR_L, MOTOR_PINS MOTOR_R)
 
 void straight(MOTOR_PINS MOTOR_L, MOTOR_PINS MOTOR_R)
 {
- setSpeed(MOTOR_L, 200);
- setSpeed(MOTOR_R, 200);
+ setSpeed(MOTOR_L, 220);
+ setSpeed(MOTOR_R, 220);
 }
 
 void testRobotMovement(MOTOR_PINS MOTOR_LEFT, MOTOR_PINS MOTOR_RIGHT)

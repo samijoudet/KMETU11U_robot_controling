@@ -17,10 +17,8 @@
 const char* mqtt_server = "test.mosquitto.org"; // anynomous Ok in 2021
 
 /*===== MQTT TOPICS ===============*/
-#define TOPIC_GANT  "uca/projet/sami/gant"
 #define TOPIC_TEMPERATURE  "uca/projet/sami/temperature"
 #define TOPIC_COMMANDE  "uca/project/sami"
-#define TOPIC_TEST "sami/message/test"
 /*===== ESP is MQTT Client =======*/
 WiFiClient espClient;           // Wifi 
 PubSubClient client(espClient); // MQTT client
@@ -82,15 +80,18 @@ void mqtt_pubcallback(char* topic,
   // Changes the variable according to the message
   if (String(topic) == TOPIC_COMMANDE) {
     getStaticJsonDocument_frombytes(message);
-    if (commande =3) {
+    if (commande == 3) {
       controle(ordre,MOTORS_LEFT,MOTORS_RIGHT);
+      time_pub = getUptime();
       }
-    if (commande =2){//a completer 
+    else {
+      controle(0,MOTORS_LEFT,MOTORS_RIGHT);
+    }
+    if (commande == 2){//mouvement caméra non inplémenté
       }
-    if (commande =1){
+    if (commande == 1){
       client.publish(TOPIC_TEMPERATURE,getJSONString_Temp().c_str());
       }
-    time_pub = getUptime();
   }
 }
 
@@ -144,8 +145,8 @@ void setup() {
 }
 /*================= LOOP ======================*/
 void loop() {
-  int32_t period = 10000; // 10 sec
-  /*--- subscribe to TOPIC_LED if not yet ! */
+  int32_t period = 1000; // 1 sec
+
   if (getUptime()-time_pub > 2000) {
     controle(0,MOTORS_LEFT,MOTORS_RIGHT);
      Serial.println("stop");
@@ -154,6 +155,6 @@ void loop() {
     mqtt_mysubscribe((char *)(TOPIC_COMMANDE));
     client.subscribe(TOPIC_GANT);
   }
-  //delay(int32_t);
+  delay(int32_t);
   client.loop();
 }

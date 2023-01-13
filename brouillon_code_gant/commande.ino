@@ -23,18 +23,18 @@ void controle (int V_MG,int V_IG,int V_PG,int V_PD,int V_ID,int V_MD){    // pre
   // ordre -> 0:arret 1,2,3 : avant (forward,left,right) 4,5,6 : arrière ((forward,left,right)) pour la voiture; autre pour la caméra 
   // pwm -> puissance des moteurs
   
-  if (V_MG > 60 ){
+  if (V_MG > 60 ){ // commande température
     commande = 1;
     pwm =0;
     ordre = 1;
    }
-  else if (V_IG >50 && V_PG<50){
+  else if (V_IG >50 ){ // commande caméra, a completer
     commande = 2;
     //a completer
     pwm =out_value_to_pwm(V_PG);
     ordre = 1;
     }
-  else if (V_PG>50){
+  else if (V_PG>50){ // commande voiture
     commande=3;
     ordre=1;
     if (V_PD > 50){ordre += 3;}

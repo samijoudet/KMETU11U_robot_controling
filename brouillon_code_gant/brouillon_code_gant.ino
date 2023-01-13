@@ -16,7 +16,6 @@ const char* mqtt_server = "test.mosquitto.org"; // anynomous Ok in 2021
 
 /*===== MQTT TOPICS ===============*/
 #define TOPIC_GANT  "uca/projet/sami/gant"
-#define TOPIC_TEMPERATURE  "uca/projet/sami/temperature"
 #define TOPIC_COMMANDE  "uca/project/sami"
 #define TOPIC_TEST "sami/message/test"
 
@@ -38,26 +37,17 @@ int pwm = 0;
 // Analog input pin that the potentiometer is attached to
 // These constants won't change. They're used to give names to the pins used:
 // M : Majeur , I : Index , P : Pouce , G : Gauche , D : Droit  
-const int analogInPin_MG = A0; //VP ou 36
-const int analogInPin_IG = A3; //VN ou 39
-const int analogInPin_PG = A6; //D34 ou 34 
-const int analogInPin_PD = A7; //D35 ou 35
-const int analogInPin_ID = A4; //D32 ou 32
-const int analogInPin_MD = A5; //D33 ou 33
+
+CAPTOR_PINS MG = {A0,"MG",0,0,0,1}; //VP ou 36
+CAPTOR_PINS IG = {A3,"IG",0,0,0,1}; //VN ou 39
+CAPTOR_PINS PG = {A6,"PG",0,0,0,1}; //D34 ou 34
+CAPTOR_PINS MD = {A5,"MD",0,0,0,1}; //D35 ou 35
+CAPTOR_PINS ID = {A4,"ID",0,0,0,1}; //D32 ou 32
+CAPTOR_PINS PD = {A7,"PD",0,0,0,1}; //D33 ou 33
+
+unsigned long time_ = 0 ; 
 
 // valeur lus et valeur calibrée des capteurs de flexion
-int sensorValue_MG  = 0;    // value read from the pot    
-int outputValue_MG  = 0;    // value output (analog out)
-int sensorValue_IG  = 0;        
-int outputValue_IG  = 0;
-int sensorValue_PG  = 0;        
-int outputValue_PG  = 0;
-int sensorValue_MD  = 0;        
-int outputValue_MD  = 0;
-int sensorValue_ID  = 0;        
-int outputValue_ID  = 0;
-int sensorValue_PD  = 0; 
-int outputValue_PD  = 0;
 
 /*====== ESP Statut =========================*/
 String getUptime(){
@@ -89,18 +79,19 @@ void setup() {
   // initialize serial communications at 9600 bps:
   Serial.begin(9600);
   // sets the pins as inputs:
-  pinMode(analogInPin_MG, INPUT);
-  pinMode(analogInPin_IG, INPUT);
-  pinMode(analogInPin_PG, INPUT);
-  pinMode(analogInPin_PD, INPUT);
-  pinMode(analogInPin_ID, INPUT);
-  pinMode(analogInPin_MD, INPUT);
-
+  pinMode(MG.pin, INPUT);
+  pinMode(IG.pin, INPUT);
+  pinMode(PG.pin, INPUT);
+  pinMode(PD.pin, INPUT);
+  pinMode(ID.pin, INPUT);
+  pinMode(MD.pin, INPUT);  
   // Connexion Wifi
   connect_wifi(); 
   print_network_status();
 
   client.setServer(mqtt_server, 1883);
+
+  time_ = millis();
 }
 
   
@@ -110,53 +101,59 @@ void loop() {
     mqtt_conection();
   }
   // read the analog in value:
-  sensorValue_MG = analogRead(analogInPin_MG);
-  sensorValue_IG = analogRead(analogInPin_IG);
-  sensorValue_PG = analogRead(analogInPin_PG);
-  sensorValue_PD = analogRead(analogInPin_PD);
-  sensorValue_ID = analogRead(analogInPin_ID);
-  sensorValue_MD = analogRead(analogInPin_MD);
+  MG.sens = analogRead(MG.pin);
+  IG.sens = analogRead(IG.pin);
+  PG.sens = analogRead(PG.pin);
+  PD.sens = analogRead(PD.pin);
+  ID.sens = analogRead(ID.pin);
+  MD.sens = analogRead(MD.pin);
 
-  // maping the résult (valeur min et max en entrée à calibrer)
-  // ouverture des d
-  outputValue_MG  = map(sensorValue_MG, 3000,3250, 0,100); // puissance
-  outputValue_IG  = map(sensorValue_IG, 3150,3600, 0,100); // puissance
-  outputValue_PG  = map(sensorValue_PG, 3000,3300, 0,100); // puissance
-  outputValue_PD  = map(sensorValue_PD, 2800,3150, 0,100); // valeur () fléchi ou non 
-  outputValue_ID  = map(sensorValue_ID, 2900,3400, 0,100);
-  outputValue_MD  = map(sensorValue_MD, 2800,3400, 0,100);
+  // maping the result (valeur min et max en entrée à calibrer)
+  MG.out = map(MG.sens, MG.min,MG.max, 0,100); // puissance
+  IG.out = map(IG.sens, IG.min,IG.max, 0,100); // puissance
+  PG.out = map(PG.sens, PG.min,PG.max, 0,100); // puissance
+  PD.out = map(PD.sens, PD.min,PD.max, 0,100); // valeur () fléchi ou non 
+  ID.out = map(ID.sens, ID.min,ID.max, 0,100);
+  MD.out = map(MD.sens, MD.min,MD.max, 0,100);
   // print the results to the Serial Monitor:
   
   Serial.print("sensor = ");
-  Serial.print(sensorValue_MG);
+  Serial.print(MG.sens);
   Serial.print(" ");
-  Serial.print(sensorValue_IG);
+  Serial.print(IG.sens);
   Serial.print(" "); 
-  Serial.print(sensorValue_PG);
+  Serial.print(PG.sens);
   Serial.print(" ");
-  Serial.print(sensorValue_PD);
+  Serial.print(PD.sens);
   Serial.print(" ");
-  Serial.print(sensorValue_ID);
+  Serial.print(ID.sens);
   Serial.print(" ");
-  Serial.print(sensorValue_MD);
+  Serial.print(MD.sens);
   Serial.print("\t output = ");
-  Serial.print(outputValue_MG);
+  Serial.print(MG.out);
   Serial.print(" ");
-  Serial.print(outputValue_IG);
+  Serial.print(IG.out);
   Serial.print(" ");
-  Serial.print(outputValue_PG);
+  Serial.print(PG.out);
   Serial.print(" ");
-  Serial.print(outputValue_PD);
+  Serial.print(PD.out);
   Serial.print(" ");
-  Serial.print(outputValue_ID);
+  Serial.print(ID.out);
   Serial.print(" ");
-  Serial.print(outputValue_MD);
-  Serial.println();
+  Serial.print(MD.out);
+  
 
-  controle(outputValue_MG,outputValue_IG,outputValue_PG,outputValue_PD,outputValue_ID,outputValue_MD);
-  client.publish(TOPIC_GANT, getJSONString_voiture(commande,ordre,pwm, lieu).c_str());
- 
+  if (millis()-time_ < 10UL*1000){
+    calibration();
+    Serial.print("   calibration =");
+    Serial.print(millis()-time_ );
+  }
+  else {
+  controle(MG.out,IG.out,PG.out,PD.out,ID.out,MD.out);
+  client.publish(TOPIC_COMMANDE, getJSONString_voiture(commande,ordre,pwm, lieu).c_str());
+  }
   // wait 200 milliseconds before the next loop for the analog-to-digital
   // converter to settle after the last reading:
   delay(1000);
+  Serial.println();
 }
